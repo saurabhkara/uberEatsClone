@@ -1,5 +1,7 @@
 import React from 'react'
 import { View, Text, Image, ScrollView } from 'react-native';
+import BouncyCheckbox from'react-native-bouncy-checkbox';
+import { useDispatch, useSelector } from 'react-redux';
 
 
 const foods=[
@@ -15,9 +17,33 @@ const foods=[
         price:"$10",
         image:'https://source.unsplash.com/collection/190727/1600x900',
     },
+    {
+        title:"Kala Jamun",
+        description:"Tasty and Healthy",
+        price:"$9",
+        image:'https://source.unsplash.com/collection/190727/1600x900',
+    },
 ]
 
-export default function MenuItem() {
+export default function MenuItem({restaurantName}) {
+    const dispatch =useDispatch();
+
+    const selectItem=(item,checkboxValue)=>{
+        dispatch({
+            type:'ADD_TO_CART',
+            payload:{...item,
+                restaurantName:restaurantName,
+                checkboxValue:checkboxValue,
+            }
+        })
+    }
+
+    const cartItem=useSelector((state)=>state.cartReducer.selectedItems.items);
+
+    const isFoodIncart=(food, cartItem)=>(
+        Boolean(cartItem.find((item)=>item.title===food.title))
+    )
+
     return (
         <ScrollView showsVerticalScrollIndicator={false}>
             { foods.map((item, index)=>(
@@ -25,10 +51,17 @@ export default function MenuItem() {
                     flexDirection: 'row', justifyContent: 'space-evenly',
                     marginHorizontal: 10, borderBottomColor:'#eee', borderBottomWidth:1, marginVertical:10,
                 }}>
-                    <FoodInfo title={item.name} description={item.description} price={foods[0].price} />
+                    <BouncyCheckbox 
+                        iconStyle={{borderColor:'gray', borderRadius:0}}
+                        fillColor='green'
+                        onPress={(checkboxValue)=>selectItem(item,checkboxValue)}
+                        isChecked={isFoodIncart(item,cartItem)}
+                    />
+                    <FoodInfo title={item.title} description={item.description} price={foods[0].price} />
                     <FoodImage image={item.image} />
                     {/* <View style={{ borderBottomColor: 'black', borderBottomWidth: 1,}} /> */}
                 </View>
+                
             ))
         }
         
@@ -39,7 +72,7 @@ export default function MenuItem() {
 const FoodInfo=(props)=>{
     return(
         <View style={{flexDirection:'column',marginHorizontal:10, width:'60%'}}>
-             <Text style={{fontSize:20, fontWeight:'bold'}}>{props.name}</Text>
+             <Text style={{fontSize:20, fontWeight:'bold'}}>{props.title}</Text>
             <Text >{props.description}</Text>
             <Text style={{fontSize:16}}>{props.price}</Text>
         </View>

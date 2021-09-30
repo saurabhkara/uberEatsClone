@@ -3,6 +3,7 @@ import { View, Text } from 'react-native';
 import { Divider } from 'react-native-elements';
 import About from '../components/RestaurantDetail/About';
 import MenuItem from '../components/RestaurantDetail/MenuItem';
+import ViewCart from '../components/RestaurantDetail/ViewCart';
 
 
 export default function RestaurantDetais(props) {
@@ -20,7 +21,8 @@ export default function RestaurantDetais(props) {
                 marginVertical:20
                 }}
             />
-            <MenuItem />
+            <MenuItem restaurantName={route.params.name}/>
+            <ViewCart navigation={props.navigation} restaurantName={route.params.name}/>
         </View>
     )
 }
