@@ -4,28 +4,9 @@ import BouncyCheckbox from'react-native-bouncy-checkbox';
 import { useDispatch, useSelector } from 'react-redux';
 
 
-const foods=[
-    {
-        title:"Lasagna",
-        description:"with butter lettuce, tomato and sauce bechamel",
-        price:"$13.50",
-        image:'https://source.unsplash.com/collection/190727/1600x900',
-    },
-    {
-        title:"Rasula",
-        description:"Soft white and spounse",
-        price:"$10",
-        image:'https://source.unsplash.com/collection/190727/1600x900',
-    },
-    {
-        title:"Kala Jamun",
-        description:"Tasty and Healthy",
-        price:"$9",
-        image:'https://source.unsplash.com/collection/190727/1600x900',
-    },
-]
 
-export default function MenuItem({restaurantName}) {
+
+export default function MenuItem({restaurantName, foods, hideCheckBox,marginLeft}) {
     const dispatch =useDispatch();
 
     const selectItem=(item,checkboxValue)=>{
@@ -51,14 +32,14 @@ export default function MenuItem({restaurantName}) {
                     flexDirection: 'row', justifyContent: 'space-evenly',
                     marginHorizontal: 10, borderBottomColor:'#eee', borderBottomWidth:1, marginVertical:10,
                 }}>
-                    <BouncyCheckbox 
+                    {hideCheckBox? null:<BouncyCheckbox 
                         iconStyle={{borderColor:'gray', borderRadius:0}}
                         fillColor='green'
                         onPress={(checkboxValue)=>selectItem(item,checkboxValue)}
                         isChecked={isFoodIncart(item,cartItem)}
-                    />
+                    />}
                     <FoodInfo title={item.title} description={item.description} price={foods[0].price} />
-                    <FoodImage image={item.image} />
+                    <FoodImage image={item.image} marginLeft={marginLeft ?marginLeft :0}/>
                     {/* <View style={{ borderBottomColor: 'black', borderBottomWidth: 1,}} /> */}
                 </View>
                 
@@ -81,9 +62,9 @@ const FoodInfo=(props)=>{
     )
 
 }
-const FoodImage=(props)=>(
+const FoodImage=({marginLeft, ...props})=>(
     <>
-    <Image source={{uri:props.image}} style={{height:110, width:110, borderRadius:15, marginBottom:7}}/>
+    <Image source={{uri:props.image}} style={{height:110, width:110, borderRadius:15, marginBottom:7,marginLeft:marginLeft}}/>
     
     </>
 )
